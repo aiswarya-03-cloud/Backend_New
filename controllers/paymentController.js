@@ -199,7 +199,7 @@ export const createPayment = async (req, res,next) => {
                 session_data: session,
             });
         } catch (error) {
-            res.status(error?.statusCode || 500).json(error.message || "internal server error");
+            res.status(error?.statusCode || 500).json(error.message || "internal server error"); 
         }
     };
     

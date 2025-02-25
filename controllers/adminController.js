@@ -36,6 +36,7 @@ export const addAdmin = async (req, res, next) => {
     await newAdmin.save();
     // Generate token
     const token = generateToken(email, role);
+    console.log("AdminToken",token)
 
     // Send response
     res.cookie('token', token,

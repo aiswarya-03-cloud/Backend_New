@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { connectDB } from './config/db.js';
 import apiRouter from './routes/index.js';
 import cors from 'cors';
+//import foodRouter from './routes/v1/foodRoute.js';
 
 const app = express()
 app.use(express.json())
@@ -22,6 +23,8 @@ connectDB();
 
 
 app.use("/api", apiRouter);
+app.use("/images",express.static('uploads'))
+
 
 // Test Cookie Route
 app.get('/check-cookie', (req, res) => {
