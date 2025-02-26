@@ -39,15 +39,22 @@ export const addAdmin = async (req, res, next) => {
     console.log("AdminToken",token)
 
     // Send response
-    res.cookie('token', token,
-      {
-        sameSite: 'None',
-        secure: true,
-        httpOnly: true,
-        path: '/',
-        maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
-      }
-    );
+    // res.cookie('token', token,
+    //   {
+    //     sameSite: 'None',
+    //     secure: true,
+    //     httpOnly: true,
+    //     path: '/',
+    //     maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
+    //   }
+    // );
+
+    res.cookie("token",token, {
+
+      sameSite: NODE_ENV === "production" ? "None" : "Lax",
+      secure: NODE_ENV === "production",
+      httpOnly: NODE_ENV === "production",
+    });
     res.json({ success: true, role: role || 'user', message: `${role} created successfully` });
 
   } catch (error) {
@@ -81,13 +88,21 @@ export  const adminLogin = async (req, res, next) => {
   const token = generateToken(email,role);
 
 
-  res.cookie('token',token,{
-    sameSite: 'None',
-    secure: true,
-    httpOnly: true,
-    path: '/',
-    maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
-  })
+  // res.cookie('token',token,{
+  //   sameSite: 'None',
+  //   secure: true,
+  //   httpOnly: true,
+  //   path: '/',
+  //   maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
+  // })
+
+  res.cookie("token",token, {
+
+    sameSite: NODE_ENV === "production" ? "None" : "Lax",
+    secure: NODE_ENV === "production",
+    httpOnly: NODE_ENV === "production",
+  });
+
   res.json({
     success:true,
     role:role,
@@ -104,10 +119,9 @@ export  const adminLogin = async (req, res, next) => {
 export const adminLogout = async (req, res, next) => {
   try {
       res.clearCookie("token", {
-        path: "/",            // must match the 'path' used when setting the cookie
-        httpOnly: true,       // same as when setting the cookie
-        secure: true,         // must match if the cookie was set with 'secure: true'
-        sameSite: "None"      // must match the 'SameSite' setting
+        sameSite: NODE_ENV === "production" ? "None" : "Lax",
+        secure: NODE_ENV === "production",
+        httpOnly: NODE_ENV === "production",
       });
 
       res.json({ success: true, message: "Admin Logout successfully" });

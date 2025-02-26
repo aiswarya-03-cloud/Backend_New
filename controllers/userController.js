@@ -4,6 +4,7 @@ import {generateUserToken } from '../utils/generateToken.js';
 //import { generateUserToken } from '../utils/generateToken.js';
 //import { imageUploadCloudinary } from "../utils/cloudinaryUpload.js";
 import validator from "validator";
+const NODE_ENV = process.env.NODE_ENV;
 
 
 export  const addUser = async (req, res, next) => {
@@ -81,8 +82,15 @@ export const userSignup = async (req, res, next) => {
 
         const token = generateUserToken(email,userData._id);
         console.log("UserId--",userData._id )
-        res.cookie('token', token);
+        // res.cookie('token', token);
         console.log("SignUp_TOKEN", token)
+
+        res.cookie("token",token, {
+
+          sameSite: NODE_ENV === "production" ? "None" : "Lax",
+          secure: NODE_ENV === "production",
+          httpOnly: NODE_ENV === "production",
+        });
 
         //return res.json({ data: userData, message: "user account created" });
 
@@ -131,13 +139,22 @@ export  const userLogin = async (req, res, next) => {
 
   
 
-  res.cookie('token',token,{
-    sameSite: 'None',
-    secure : true,
-    httpOnly: true,
-    path: '/',
-    maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
-  })
+  // res.cookie('token',token,{
+  //   sameSite: 'None',
+  //   secure : true,
+  //   httpOnly: true,
+  //   path: '/',
+  //   maxAge: 2 * 60 * 60 * 1000 // 2 hours in milliseconds
+  // })
+
+
+  
+  res.cookie("token",token, {
+
+    sameSite: NODE_ENV === "production" ? "None" : "Lax",
+    secure: NODE_ENV === "production",
+    httpOnly: NODE_ENV === "production",
+  });
   //res.status(200).json({success:true,message:'user logged in successfully'})
   console.log("LoginToken--", token)
 
@@ -165,10 +182,9 @@ export  const userLogin = async (req, res, next) => {
 export const userLogout = async (req, res, next) => {
   try {
       res.clearCookie("token", {
-        path: "/",            // must match the 'path' used when setting the cookie
-        httpOnly: true,       // same as when setting the cookie
-        secure: true,         // must match if the cookie was set with 'secure: true'
-        sameSite: "None"      // must match the 'SameSite' setting
+        sameSite: NODE_ENV === "production" ? "None" : "Lax",
+        secure: NODE_ENV === "production",
+        httpOnly: NODE_ENV === "production",
       });
       res.status(200).json({ success: true, message: "user logout successfully" });
   } catch (error) {
