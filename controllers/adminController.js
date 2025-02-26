@@ -1,6 +1,7 @@
 import bcrypt from 'bcrypt'
 import { Admin } from '../models/adminModel.js';
 import { generateToken } from '../utils/generateToken.js';
+const NODE_ENV = process.env.NODE_ENV;
 
 
 
